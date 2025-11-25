@@ -9,23 +9,23 @@ brands, and social media users generate **original, copyright-safe audio tailore
 
 ##  Features
 
-### 1. Jingle Generator
+## 1. Jingle Generator
 Create short, catchy, brand-ready audio logos.
 
-### 2. Background Music Composer**
+## 2. Background Music Composer**
 Generate copyright-safe ambient or cinematic tracks for:
 - YouTube videos  
 - Instagram reels  
 - TikTok posts  
 - Podcasts  
 
-### 3. Personal Music Persona
+## 3. Personal Music Persona
 Analyze a user's taste (mocked Spotify integration) and:
 - Build a music persona  
 - Compose a personalized track  
 - Suggest a style based on preferences  
 
-### 4. Multi-Agent Reasoning Pipeline**
+## 4. Multi-Agent Reasoning Pipeline**
 Musigent uses:
 - **PlannerAgent** → interprets request, defines structure  
 - **ComposerAgent** → generates (mock) audio  
@@ -89,18 +89,19 @@ README.md # You are here
 
 ## ▶️ How to Run Locally
 
-### **1. Install dependencies**
+1. Install dependencies**
 ```
 pip install -r requirements.txt
 ```
 
-## **2. Start FastAPI
+2. Start FastAPI
 ```
 uvicorn app:app --reload
 ```
-### **3. Open in browser
-
+3. Open in browser
+```
 http://127.0.0.1:8000/docs
+```
 
 You can test the /generate endpoint directly.
 ```
@@ -116,13 +117,13 @@ runner.handle_request(
 ```
 This returns:
 
-1-The plan
+**A- The plan**
 
-2-The (mocked) generated audio
+**B- The (mocked) generated audio**
 
-3-The evaluation score
+**C- The evaluation score**
 
-###📡 On Kaggle
+# 📡 On Kaggle
 
 **To use this project inside a Kaggle notebook:**
 ```
@@ -135,7 +136,7 @@ runner = MusigentRunner()
 runner.handle_request("bgm", "soft ambient background", 30)
 ```
 
-##**Future Work**
+# Future Work
 Planned improvements include:
 
 1- Integration with real Suno API for audio generation
@@ -150,12 +151,12 @@ Planned improvements include:
 
 6- Deployment via Google Cloud’s Agent Engine
 
-###🤝 Contributions
+# 🤝 Contributions
 
 Feel free to fork the repo and submit pull requests.
 This project was created as part of the Kaggle Agents Intensive Capstone Challenge.
 
-###⭐ Acknowledgements
+# ⭐ Acknowledgements
 
 Thanks to:
 
@@ -165,4 +166,5 @@ OpenAI & Suno for inspiring creative AI tools
 
 The entire Kaggle community
 
-MZ - 11/2025
+============
+### MZ - 11/2025
