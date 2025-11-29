@@ -1,1 +1,2 @@
-self.time_agent = TimeAgent()
+self.time = TimeAgent()
+
