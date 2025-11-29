@@ -3,7 +3,7 @@ from musigent.agents.planner import PlannerAgent
 from musigent.agents.composer import ComposerAgent
 from musigent.agents.quality import QualityAgent
 from musigent.memory import MemoryStore
-from musigent.agents.time_agent import TimeAgent
+from musigent.agents.time import TimeAgent
 
 
 class MusigentRunner:
