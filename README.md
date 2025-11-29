@@ -25,7 +25,12 @@ Analyze a user's taste (mocked Spotify integration) and:
 - Compose a personalized track  
 - Suggest a style based on preferences  
 
-## 4. Multi-Agent Reasoning Pipeline**
+## 4. TimeAgent  
+Provides UTC timestamp metadata for each generation.  
+Used to track creation time and support future observability.
+
+
+## 5. Multi-Agent Reasoning Pipeline**
 Musigent uses:
 - **PlannerAgent** → interprets request, defines structure  
 - **ComposerAgent** → generates (mock) audio  
