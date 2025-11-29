@@ -41,9 +41,9 @@ class TimeAgent:
     def __init__(self):
         self.agent = Agent(
             model="gemini-3-pro-preview",
-            name="time_agent",
+            name="time",
             instruction=(
-                "Automatically detect user location via IP and return time in UTC "
+                "Automatically detect user location via IP and return time in UTC."
                 "using the auto_time_utc tool."
             ),
             tools=[auto_time_utc],
