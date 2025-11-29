@@ -3,12 +3,12 @@
 # and returns the current time in UTC (timezone 0).
     
 from google.adk.agents.llm_agent import Agent
-from google.adk import tool
+#from google.adk import tool
 from datetime import datetime
 import requests
 
 
-@tool  # @tool registers this function as an ADK tool so the agent can call it.
+#@tool  # @tool registers this function as an ADK tool so the agent can call it.
 def auto_time_utc() -> dict:
     """
     Automatically detects the user's timezone using IP
