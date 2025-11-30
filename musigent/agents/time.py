@@ -1,6 +1,5 @@
 # musigent/agents/time.py
 # Time tool: deterministic function that returns real UTC time + timezone.
-
 from datetime import datetime
 import requests
 
@@ -17,7 +16,4 @@ def get_utc_time() -> dict:
             "raw_offset": data.get("raw_offset"),
         }
     except Exception as e:
-        return {
-            "status": "error",
-            "message": f"Failed to fetch time info: {e}",
-        }
+        return {"status": "error", "message": str(e)}
