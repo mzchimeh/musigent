@@ -25,7 +25,7 @@ Analyze a user's taste (mocked Spotify integration) and:
 - Compose a personalized track  
 - Suggest a style based on preferences  
 
-## 4. TimeAgent  
+## 4. Time Tool
 Provides UTC timestamp metadata for each generation.  
 Used to track creation time and support future observability.
 
