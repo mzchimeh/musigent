@@ -1,19 +1,20 @@
 # musigent/agents/time.py
 # Time tool: deterministic function that returns real UTC time + timezone.
-from datetime import datetime
 import requests
+from datetime import datetime
+import os
 
-def get_utc_time() -> dict:
+def get_utc_time():
     try:
-        resp = requests.get("https://worldtimeapi.org/api/ip", timeout=5)
-        resp.raise_for_status()
-        data = resp.json()
-        utc_dt = datetime.fromisoformat(data["utc_datetime"].replace("Z", "+00:00"))
+        key = os.environ["GOOGLE_API_KEY"]
+        url = f"https://www.googleapis.com/geolocation/v1/geolocate?key={key}"
+        resp = requests.post(url, timeout=5)
+        
+        utc = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
         return {
             "status": "success",
-            "utc_time": utc_dt.isoformat(),
-            "timezone": data.get("timezone"),
-            "raw_offset": data.get("raw_offset"),
+            "utc_time": utc,
+            "source": "google geolocation"
         }
-    except Exception as e:
-        return {"status": "error", "message": str(e)}
+    except:
+        return {"status": "error", "utc_time": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")}
