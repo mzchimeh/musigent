@@ -75,23 +75,25 @@ If you cloned the repo, the architecture diagram is here:
 musigent/
 │
 ├── agents/
-│   ├── planner.py       # Decides style, tempo, strategy
-│   ├── composer.py      # Generates (mocked) music
-│   └── quality.py       # LLM-like evaluation scoring
+│   ├── planner.py        # Decides style, tempo, strategy
+│   ├── composer.py       # Generates (mocked) music
+│   ├── quality.py        # LLM-like evaluation scoring
+│   └── time.py           # Time Tool (UTC timestamp + geolocation HTTP support)
 │
-├── tools.py             # Mock Suno + Spotify tool wrappers
-├── memory.py            # JSON-based long-term memory + user daily limit
-├── runner.py            # Full pipeline orchestrator
+├── tools.py              # Mock Suno + Spotify tool wrappers
+├── memory.py             # JSON-based long-term memory + user daily limit
+├── runner.py             # Full pipeline orchestrator
 │
 assets/
-│   └── architecture.png # System architecture diagram
+│   └── architecture.png  # System architecture diagram
 │
 notebooks/
-│   └── demo.ipynb       # Kaggle-ready demonstration notebook
+│   └── demo.ipynb        # Kaggle-ready demonstration notebook
 │
-app.py                   # FastAPI demo service
-requirements.txt         # Dependencies
-README.md                # You are here
+app.py                    # FastAPI demo service
+requirements.txt          # Dependencies
+README.md                 # You are here
+
 ```
 
 ---
