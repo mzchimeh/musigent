@@ -1,54 +1,33 @@
-# TimeAgent:
-# Automatically detects the user's timezone via IP
-# and returns the current time in UTC (timezone 0).
-    
-from google.adk.agents.llm_agent import Agent
-#from google.adk import tool
+# musigent/agents/time.py
+# Time tool: deterministic function that returns real UTC time + timezone.
+
 from datetime import datetime
 import requests
 
 
-#@tool  # @tool registers this function as an ADK tool so the agent can call it.
-def auto_time_utc() -> dict:
+def get_utc_time() -> dict:
     """
-    Automatically detects the user's timezone using IP
-    and returns the current time in UTC (timezone 0).
+    Deterministic TOOL, not an LLM agent.
+    Uses worldtimeapi.org to get real current time, then returns it in UTC.
     """
     try:
-        # Detect timezone
-        info = requests.get("https://ipapi.co/json/").json()
-        tz = info.get("timezone", "Unknown")
+        resp = requests.get("https://worldtimeapi.org/api/ip", timeout=5)
+        resp.raise_for_status()
+        data = resp.json()
 
-        # UTC time
-        utc_now = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+        # Convert API datetime to Python datetime in UTC
+        utc_dt = datetime.fromisoformat(
+            data["utc_datetime"].replace("Z", "+00:00")
+        )
 
         return {
             "status": "success",
-            "detected_timezone": tz,
-            "utc_time": utc_now
+            "utc_time": utc_dt.isoformat(),
+            "timezone": data.get("timezone"),
+            "raw_offset": data.get("raw_offset"),
         }
-
-    except Exception:
+    except Exception as e:
         return {
             "status": "error",
-            "utc_time": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+            "message": f"Failed to fetch time info: {e}",
         }
-
-
-class TimeAgent:
-    """ADK-based agent that returns UTC time after auto-detecting location."""
-
-    def __init__(self):
-        self.agent = Agent(
-            model="gemini-3-pro-preview",
-            name="time",
-            instruction=(
-                "Automatically detect user location via IP and return time in UTC."
-                "using the auto_time_utc tool."
-            ),
-            tools=[auto_time_utc],
-        )
-
-    def get_time_info(self):
-        """Call the ADK agent to retrieve UTC time."""
-        return self.agent("What is the current time?")
