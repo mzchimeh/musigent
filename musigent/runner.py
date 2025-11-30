@@ -2,7 +2,7 @@
 from musigent.agents.planner import PlannerAgent
 from musigent.agents.composer import ComposerAgent
 from musigent.agents.quality import QualityAgent
-from musigent.agents import get_utc_time
+from musigent.agents.time import get_utc_time
 from musigent.memory import MemoryStore
 
 
