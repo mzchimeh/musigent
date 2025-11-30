@@ -19,7 +19,7 @@ class MusigentRunner:
         plan = self.planner.plan(mode, prompt, duration_sec)
         draft = self.composer.compose(plan)
         eval_ = self.quality.evaluate(draft)
-        self.memory.save_interaction(plan, draft, eval_)
+        self.memory.save_interaction(plan, draft, eval_, username, time_info)
         time_info = get_utc_time()
         return {"plan": plan,
                 "draft": draft,
