@@ -35,6 +35,12 @@ class MusigentRunner:
         vibe: str,
         username: str = "guest",
     ):
+        # ⬅️ NEW: short-term rate limit (max 5 requests per 60 seconds)
+        if self.memory.get_user_recent_count(username, window_seconds=60) >= 5:
+            return {
+                "error": "Rate limit: max 5 jingle requests per minute per user. Please wait and try again."
+            }
+
         # daily limit: max 5 jingles per user per day
         if self.memory.get_user_daily_count(username) >= 5:
             return {
@@ -61,3 +67,4 @@ class MusigentRunner:
             "evaluation": eval_,
             "time_info": time_info,
         }
+
