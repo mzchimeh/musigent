@@ -77,7 +77,7 @@ class SunoTool:
 
         except Exception as e:
             # Fail gracefully but visibly
-            return f"SUNO_EXCEPTION: {e}"
+            return f"SUNO_EXCEPTION: {type(e).__name__}: {e}"
 
 
 class SpotifyTool:
