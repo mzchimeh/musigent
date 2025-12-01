@@ -6,7 +6,7 @@ class SunoTool:
     def __init__(self, api_key: str | None = None,
                  model: str = "V4_5ALL",
                  callback_url: str = "https://example.com/callback"):
-        # API key from arg or env (for Kaggle notebook: use a secret named SUNO_API_KEY)
+        # API key from arg or env (for Kaggle notebook: used a secret named SUNO_API_KEY, you can use your SUNO Key)
         self.api_key = api_key or os.getenv("SUNO_API_KEY")
         if not self.api_key:
             raise ValueError(
@@ -52,8 +52,10 @@ class SunoTool:
             if code != 200:
                 msg = data.get("msg") if isinstance(data, dict) else str(data)
                 return f"SUNO_ERROR: code={code} msg={msg}"
-
+        
             tracks = None
+            if code == 429:
+                return "Insufficient funds: please recharge your account."
             if isinstance(data, dict):
                 tracks = data.get("data")
             else:
