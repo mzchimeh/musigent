@@ -61,7 +61,7 @@ class SunoTool:
 
             # Specific handling for insufficient credits
             if code == 429:
-                return "SUNO_NO_CREDITS: Insufficient funds, please recharge your Suno account."
+                return "NO_CREDITS: Insufficient funds, please recharge your account."
 
             # Generic non-200 handling
             if code != 200:
