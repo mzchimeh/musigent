@@ -3,10 +3,19 @@ import requests
 
 
 class SunoTool:
-    def __init__(self, api_key: str | None = None,
-                 model: str = "V4_5ALL",
-                 callback_url: str = "https://example.com/callback"):
-        # API key from arg or env (for Kaggle notebook: used a secret named SUNO_API_KEY, you can use your SUNO Key)
+    def __init__(
+        self,
+        api_key: str | None = None,
+        model: str = "V4_5ALL",
+        callback_url: str = "https://example.com/callback",
+    ):
+        """
+        Real Suno API client.
+
+        API key is taken from:
+        - explicit api_key argument, OR
+        - SUNO_API_KEY environment variable (e.g. Kaggle secret)
+        """
         self.api_key = api_key or os.getenv("SUNO_API_KEY")
         if not self.api_key:
             raise ValueError(
@@ -18,7 +27,7 @@ class SunoTool:
 
     def generate_music(self, prompt: str, style: str, duration_sec: int):
         """
-        Generate real music via Suno API.
+        Generate real music via Suno API and return a URL or an error string.
         """
         safe_title = (prompt or "Brand Jingle")[:80]
 
@@ -45,41 +54,38 @@ class SunoTool:
                 timeout=30,
             )
             resp.raise_for_status()
-            data = resp.json()   
+            data = resp.json()
 
-            # some APIs wrap response, some don't 
-             code = data.get("code", 200) if isinstance(data, dict) else 200
+            # Some APIs wrap response, some don't – keep it flexible
+            code = data.get("code", 200) if isinstance(data, dict) else 200
 
-            # specific message for no credits
+            # Specific handling for insufficient credits
             if code == 429:
                 return "SUNO_NO_CREDITS: Insufficient funds, please recharge your Suno account."
 
-            # generic non-200 handling
+            # Generic non-200 handling
             if code != 200:
                 msg = data.get("msg") if isinstance(data, dict) else str(data)
                 return f"SUNO_ERROR: code={code} msg={msg}"
 
-            tracks = None
-            if isinstance(data, dict):
-                tracks = data.get("data")
-            else:
-                tracks = data
-
+            # Extract tracks
             if isinstance(data, dict):
                 tracks = data.get("data")
             else:
                 tracks = data
 
             if isinstance(tracks, dict):
-                
+                # e.g. {"0": {...}, "1": {...}}
                 tracks = list(tracks.values())
             if tracks is None:
                 tracks = []
+            if not isinstance(tracks, list):
+                tracks = [tracks]
 
             if not tracks:
                 return f"SUNO_ERROR: no tracks returned, raw={data}"
 
-            first = tracks[0]
+            first = tracks[0] or {}
             url = first.get("streamUrl") or first.get("audioUrl")
             if not url:
                 return f"SUNO_ERROR: no URL in first track, raw={first}"
@@ -95,4 +101,8 @@ class SpotifyTool:
         self.token = token
 
     def analyze_user(self, user_id):
-        return {"favorite_genres": ["dark_rock", "electronic"], "energy": 0.7}
+        # Still mocked – enough for persona mode and demos
+        return {
+            "favorite_genres": ["dark_rock", "electronic"],
+            "energy": 0.7,
+        }
