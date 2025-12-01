@@ -56,27 +56,37 @@ class SunoTool:
                 timeout=30,
             )
             resp.raise_for_status()
-            data = resp.json()
+data = resp.json()
 
-            # Typical shape: {"code":200, "data":[{...},{...}], "msg":"success"}
-            if data.get("code") != 200:
-                # Return an error string so the rest of the pipeline still works
-                return f"SUNO_ERROR: code={data.get('code')} msg={data.get('msg')}"
+            # some APIs wrap response, some don't – keep it flexible
+            code = data.get("code", 200) if isinstance(data, dict) else 200
+            if code != 200:
+                msg = data.get("msg") if isinstance(data, dict) else str(data)
+                return f"SUNO_ERROR: code={code} msg={msg}"
 
-            tracks = data.get("data") or []
+            tracks = None
+            if isinstance(data, dict):
+                tracks = data.get("data")
+            else:
+                tracks = data
+
+            if isinstance(tracks, dict):
+                # if data["data"] is a dict like {"0": {...}, "1": {...}}
+                tracks = list(tracks.values())
+            if tracks is None:
+                tracks = []
+
             if not tracks:
-                return "SUNO_ERROR: no tracks returned"
+                return f"SUNO_ERROR: no tracks returned, raw={data}"
 
             first = tracks[0]
-            # Prefer stream URL; fallback to audioUrl
             url = first.get("streamUrl") or first.get("audioUrl")
             if not url:
-                return "SUNO_ERROR: no URL in response"
-
+                return f"SUNO_ERROR: no URL in first track, raw={first}"
+                
             return url
 
         except Exception as e:
-            # Fail gracefully but visibly
             return f"SUNO_EXCEPTION: {type(e).__name__}: {e}"
 
 
