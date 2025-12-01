@@ -1,6 +1,6 @@
-
 import uuid
 from musigent.tools import SunoTool, SpotifyTool
+
 
 class ComposerAgent:
     def __init__(self, memory):
@@ -10,11 +10,23 @@ class ComposerAgent:
 
     def compose(self, plan):
         track_id = str(uuid.uuid4())
+
         if plan["mode"] == "persona":
             taste = self.spotify.analyze_user("mock_user_id")
         else:
             taste = {}
-        audio_url = self.suno.generate_music(plan["prompt"], plan["style"], plan["duration_sec"])
+
+        # ✅ enforce 5-second max for jingles
+        duration = plan["duration_sec"]
+        if plan["mode"] == "jingle":
+            duration = min(5, duration)
+
+        audio_url = self.suno.generate_music(
+            plan["prompt"],
+            plan["style"],
+            duration,
+        )
+
         draft = {
             "track_id": track_id,
             "audio_url": audio_url,
