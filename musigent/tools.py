@@ -48,14 +48,23 @@ class SunoTool:
             data = resp.json()   
 
             # some APIs wrap response, some don't 
-            code = data.get("code", 200) if isinstance(data, dict) else 200
+             code = data.get("code", 200) if isinstance(data, dict) else 200
+
+            # specific message for no credits
+            if code == 429:
+                return "SUNO_NO_CREDITS: Insufficient funds, please recharge your Suno account."
+
+            # generic non-200 handling
             if code != 200:
                 msg = data.get("msg") if isinstance(data, dict) else str(data)
                 return f"SUNO_ERROR: code={code} msg={msg}"
-        
+
             tracks = None
-            if code == 429:
-                return "Insufficient funds: please recharge your account."
+            if isinstance(data, dict):
+                tracks = data.get("data")
+            else:
+                tracks = data
+
             if isinstance(data, dict):
                 tracks = data.get("data")
             else:
