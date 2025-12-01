@@ -35,7 +35,7 @@ class MusigentRunner:
         username: str = "guest",
     ):
         # daily limit: max 5 jingles per user per day
-        if self.self_memory.get_user_daily_count(username) >= 5:
+        if self.memory.get_user_daily_count(username) >= 5:
             return {
                 "error": "Daily limit reached. Max 5 jingles per user per day."
             }
@@ -48,11 +48,11 @@ class MusigentRunner:
         )
 
         plan = self.jingle.build_plan(j_input)
-        draft = self.self_composer.compose(plan)
-        eval_ = self.self_quality.evaluate(draft)
+        draft = self.composer.compose(plan)
+        eval_ = self.quality.evaluate(draft)
 
         time_info = get_utc_time()
-        self.self_memory.save_interaction(plan, draft, eval_, username, time_info)
+        self.memory.save_interaction(plan, draft, eval_, username, time_info)
 
         return {
             "plan": plan,
