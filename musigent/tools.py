@@ -1,5 +1,4 @@
 import os
-import time
 import requests
 
 
@@ -7,7 +6,7 @@ class SunoTool:
     def __init__(self, api_key: str | None = None,
                  model: str = "V4_5ALL",
                  callback_url: str = "https://example.com/callback"):
-        # API key from arg or env (for Kaggle: use a secret named SUNO_API_KEY)
+        # API key from arg or env (for Kaggle notebook: use a secret named SUNO_API_KEY)
         self.api_key = api_key or os.getenv("SUNO_API_KEY")
         if not self.api_key:
             raise ValueError(
@@ -20,16 +19,7 @@ class SunoTool:
     def generate_music(self, prompt: str, style: str, duration_sec: int):
         """
         Generate real music via Suno API.
-
-        For jingles we use:
-        - customMode = true
-        - instrumental = true (no lyrics)
-        - model = self.model
-        - style = style from the plan
-        - title = short version of prompt
-        Duration is *hinted* in the prompt text (Suno doesn't take seconds directly).
         """
-        # Build a short, safe title (required in customMode=true)
         safe_title = (prompt or "Brand Jingle")[:80]
 
         headers = {
@@ -41,9 +31,8 @@ class SunoTool:
             "customMode": True,
             "instrumental": True,
             "model": self.model,
-            "style": style,                # e.g. "high-energy, punchy, modern"
+            "style": style,
             "title": safe_title,
-            # We don’t need lyrics since instrumental=True, but we hint duration in idea text:
             "prompt": f"{prompt} (around {duration_sec} seconds jingle)",
             "callBackUrl": self.callback_url,
         }
@@ -56,9 +45,9 @@ class SunoTool:
                 timeout=30,
             )
             resp.raise_for_status()
-data = resp.json()
+            data = resp.json()   
 
-            # some APIs wrap response, some don't – keep it flexible
+            # some APIs wrap response, some don't 
             code = data.get("code", 200) if isinstance(data, dict) else 200
             if code != 200:
                 msg = data.get("msg") if isinstance(data, dict) else str(data)
@@ -71,7 +60,7 @@ data = resp.json()
                 tracks = data
 
             if isinstance(tracks, dict):
-                # if data["data"] is a dict like {"0": {...}, "1": {...}}
+                
                 tracks = list(tracks.values())
             if tracks is None:
                 tracks = []
@@ -83,7 +72,7 @@ data = resp.json()
             url = first.get("streamUrl") or first.get("audioUrl")
             if not url:
                 return f"SUNO_ERROR: no URL in first track, raw={first}"
-                
+
             return url
 
         except Exception as e:
