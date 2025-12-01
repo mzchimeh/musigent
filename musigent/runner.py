@@ -10,7 +10,7 @@ from musigent.agents import PlannerAgent, ComposerAgent, QualityAgent, JingleAge
 class MusigentRunner:
     def __init__(self):
         self.memory = MemoryStore("memory_db.json")
-        self.planner = PlannerAgent()
+        self.planner = PlannerAgent(self.memory)
         self.composer = ComposerAgent(self.memory)
         self.quality = QualityAgent(self.memory)
         self.jingle = JingleAgent()
