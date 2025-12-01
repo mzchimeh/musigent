@@ -206,5 +206,5 @@ This project was built as part of the **Kaggle Agents Intensive Capstone**.
 
 ---
 
-### **MZ — Powered by Musigent**  
+### **Musigent - by MZ**  
 *November 2025*
