@@ -61,7 +61,7 @@ class SunoTool:
 
             # Specific handling for insufficient credits
             if code == 429:
-                return "<span style='color:red; font-weight:bold;'>❌ SUNO ERROR — INSUFFICIENT CREDITS</span><br>"
+                return "<span style='color:red; font-weight:bold;'>❌ ERROR — INSUFFICIENT CREADITS.PLEASE CHARGE YOUR ACCOUNT!</span><br>"
 
             # Generic non-200 handling
             if code != 200:
