@@ -1,5 +1,5 @@
 import json, os
-from datetime import datetime
+from datetime import datetime, timedelta 
 
 class MemoryStore:
     def __init__(self, path="memory_db.json"):
@@ -46,3 +46,33 @@ class MemoryStore:
             f.seek(0)
             json.dump(data, f, indent=2)
             f.truncate()
+    #This reads our JSON log (where we already save timestamp_utc and username) 
+    #and counts how many events happened in the last 60 seconds for that user.       
+    def get_user_recent_count(self, username: str, window_seconds: int = 60) -> int:   
+        """How many interactions this username had in the last window_seconds."""
+        try:
+            with open(self.path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        except FileNotFoundError:
+            return 0
+
+        now = datetime.utcnow()
+        cutoff = now - timedelta(seconds=window_seconds)
+        count = 0
+
+        for item in data.get("interactions", []):
+            if item.get("username") != username:
+                continue
+
+            ts = item.get("timestamp_utc") or item.get("timestamp")
+            if not ts:
+                continue
+            try:
+                t = datetime.fromisoformat(ts.replace("Z", "+00:00"))
+            except Exception:
+                continue
+
+            if t >= cutoff:
+                count += 1
+
+        return count
