@@ -4,7 +4,7 @@ from musigent.agents.composer import ComposerAgent
 from musigent.agents.quality import QualityAgent
 from musigent.agents.time import get_utc_time
 from musigent.memory import MemoryStore
-
+from musigent.agents import PlannerAgent, ComposerAgent, QualityAgent, JingleAgent, JingleInput
 
 
 class MusigentRunner:
@@ -13,7 +13,7 @@ class MusigentRunner:
         self.planner = PlannerAgent(self.memory)
         self.composer = ComposerAgent(self.memory)
         self.quality = QualityAgent(self.memory)
-
+        self.jingle = JingleAgent()
 
     def handle_request(self, mode, prompt, duration_sec=30):
         plan = self.planner.plan(mode, prompt, duration_sec)
@@ -26,3 +26,21 @@ class MusigentRunner:
                 "evaluation": eval_,
                 "time_info": time_info
         }
+    def handle_jingle_survey(
+        self,
+        brand_name: str,
+        company_field: str,
+        customer_persona: str,
+        vibe: str,
+        username: str = "guest",
+    ):
+        j_input = JingleInput(
+            brand_name=brand_name,
+            company_field=company_field,
+            customer_persona=customer_persona,
+            vibe=vibe,
+        )
+
+        plan = self.jingle.build_plan(j_input)
+        draft = self.composer.compose(plan)
+        eval_ = self.quality.evaluate(draft)
