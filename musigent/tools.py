@@ -61,7 +61,7 @@ class SunoTool:
 
             # Specific handling for insufficient credits
             if code == 429:
-                return "NO_CREDITS: Insufficient funds, please recharge your account."
+                return "<span style='color:red; font-weight:bold;'>❌ SUNO ERROR — INSUFFICIENT CREDITS</span><br>"
 
             # Generic non-200 handling
             if code != 200:
@@ -91,13 +91,8 @@ class SunoTool:
                 return f"SUNO_ERROR: no URL in first track, raw={first}"
 
             return url
-                        # Specific handling for insufficient credits
-            if code == 429:
-                return (
-                    "SUNO_NO_CREDITS: Insufficient funds, please recharge your Suno account.\n\n"
-                    "<span style='color:red; font-weight:bold;'>❌ SUNO ERROR — INSUFFICIENT CREDITS</span><br>"
-                    "Please recharge your Suno account to continue generating real audio."
-                )
+
+ 
         except Exception as e:
             return f"SUNO_EXCEPTION: {type(e).__name__}: {e}"
 
