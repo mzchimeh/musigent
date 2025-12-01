@@ -48,15 +48,15 @@ class MemoryStore:
             f.truncate()
     #This reads our JSON log (where we already save timestamp_utc and username) 
     #and counts how many events happened in the last 60 seconds for that user.       
-    def get_user_recent_count(self, username: str, window_seconds: int = 60) -> int:   
-        """How many interactions this username had in the last window_seconds."""
+    def get_user_recent_count(self, username: str, window_seconds: int = 60) -> int:
+        """How many interactions this user had in the last window_seconds (UTC)."""
         try:
             with open(self.path, "r", encoding="utf-8") as f:
                 data = json.load(f)
         except FileNotFoundError:
             return 0
 
-        now = datetime.utcnow()
+        now = datetime.utcnow()                      # naive UTC
         cutoff = now - timedelta(seconds=window_seconds)
         count = 0
 
@@ -67,8 +67,13 @@ class MemoryStore:
             ts = item.get("timestamp_utc") or item.get("timestamp")
             if not ts:
                 continue
+
             try:
-                t = datetime.fromisoformat(ts.replace("Z", "+00:00"))
+                # try to parse a few common formats
+                s = ts.replace("Z", "+00:00").replace(" UTC", "")
+                t = datetime.fromisoformat(s)
+                # force naive UTC for safe comparison
+                t = t.replace(tzinfo=None)
             except Exception:
                 continue
 
