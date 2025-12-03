@@ -1,10 +1,10 @@
 from musigent.utils.formatter import result_to_dataframe
+from musigent.memory import MemoryStore
 from musigent.agents.planner import PlannerAgent
 from musigent.agents.composer import ComposerAgent
 from musigent.agents.quality import QualityAgent
+from musigent.agents.jingle import JingleAgent, JingleInput
 from musigent.agents.time import get_utc_time
-from musigent.memory import MemoryStore
-from musigent.agents import PlannerAgent, ComposerAgent, QualityAgent, JingleAgent, JingleInput
 
 
 class MusigentRunner:
@@ -15,20 +15,23 @@ class MusigentRunner:
         self.quality = QualityAgent(self.memory)
         self.jingle = JingleAgent()
 
-
-    def handle_request(self, mode, prompt, duration_sec=30):
+    def handle_request(self, mode, prompt, duration_sec: int = 30, username: str = "guest"):
         plan = self.planner.plan(mode, prompt, duration_sec)
         draft = self.composer.compose(plan)
         eval_ = self.quality.evaluate(draft)
-        self.memory.save_interaction(plan, draft, eval_, username, time_info)
         time_info = get_utc_time()
-        result {"plan": plan,
-                "draft": draft,
-                "evaluation": eval_,
-                "time_info": time_info
+
+        self.memory.save_interaction(plan, draft, eval_, username, time_info)
+
+        result = {
+            "plan": plan,
+            "draft": draft,
+            "evaluation": eval_,
+            "time_info": time_info,
         }
         result["table"] = result_to_dataframe(result)
         return result
+
     def handle_jingle_survey(
         self,
         brand_name: str,
@@ -37,7 +40,7 @@ class MusigentRunner:
         vibe: str,
         username: str = "guest",
     ):
-        # ⬅️ NEW: short-term rate limit (max 5 requests per 60 seconds)
+        # short-term rate limit (max 5 requests per 60 seconds)
         if self.memory.get_user_recent_count(username, window_seconds=60) >= 5:
             return {
                 "error": "Rate limit: max 5 jingle requests per minute per user. Please wait and try again."
@@ -58,17 +61,4 @@ class MusigentRunner:
 
         plan = self.jingle.build_plan(j_input)
         draft = self.composer.compose(plan)
-        eval_ = self.quality.evaluate(draft)
-
-        time_info = get_utc_time()
-        self.memory.save_interaction(plan, draft, eval_, username, time_info)
-
-        result {
-            "plan": plan,
-            "draft": draft,
-            "evaluation": eval_,
-            "time_info": time_info,
-        }
-        result["table"] = result_to_dataframe(result)
-        return result
-
+        eval_ = self.quality.evaluate(dr_
