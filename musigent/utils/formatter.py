@@ -18,19 +18,21 @@ def flatten_dict(d, parent_key='', sep=' → '):
 def result_to_dataframe(result_dict):
     """
     Converts a full Musigent result (plan, draft, evaluation, time)
-    into a clean Pandas DataFrame for Kaggle/Colab display.
-    Forces left-to-right text direction for all values.
+    into a Pandas Styler for Kaggle/Colab display.
+    Forces left-to-right direction and left alignment.
     """
     flat = flatten_dict(result_dict)
+    df = pd.DataFrame(flat.items(), columns=["Field", "Value"])
 
-    # force LTR + left alignment to avoid RTL auto-detection
-    flat_ltr = {
-        k: f"<div style='direction:ltr; text-align:left;'>{v}</div>"
-        for k, v in flat.items()
-    }
-
-    df = pd.DataFrame(flat_ltr.items(), columns=["Field", "Value"])
-    return df
+    styler = (
+        df.style
+        .set_table_styles([
+            {"selector": "th", "props": [("text-align", "left"), ("direction", "ltr")]},
+            {"selector": "td", "props": [("text-align", "left"), ("direction", "ltr")]},
+            {"selector": "table", "props": [("direction", "ltr")]}
+        ])
+    )
+    return styler
 
 
 def result_to_sections(result_dict):
