@@ -19,9 +19,17 @@ def result_to_dataframe(result_dict):
     """
     Converts a full Musigent result (plan, draft, evaluation, time)
     into a clean Pandas DataFrame for Kaggle/Colab display.
+    Forces left-to-right text direction for all values.
     """
     flat = flatten_dict(result_dict)
-    df = pd.DataFrame(flat.items(), columns=["Field", "Value"])
+
+    # force LTR + left alignment to avoid RTL auto-detection
+    flat_ltr = {
+        k: f"<div style='direction:ltr; text-align:left;'>{v}</div>"
+        for k, v in flat.items()
+    }
+
+    df = pd.DataFrame(flat_ltr.items(), columns=["Field", "Value"])
     return df
 
 
