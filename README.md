@@ -83,24 +83,28 @@ No unnecessary Suno API calls when limits are exceeded.
 
 ```mermaid
 flowchart LR
-    classDef dark fill:#1a1a1a,stroke:#888,color:#e6e6e6;
-    classDef api fill:#222,stroke:#999,color:#e6e6e6;
 
-    U["User"]:::dark --> J["JingleAgent"]:::dark
+%% --- Dark mode classes ---
+classDef dark fill:#1a1a1a,stroke:#888,color:#e6e6e6;
+classDef api fill:#222,stroke:#999,color:#e6e6e6;
 
-    subgraph M["Musigent"]:::dark
-        J --> MS["MemoryStore"]:::dark
-        MS <--> T["TimeAgent"]:::dark
-        T --> Q["QualityAgent (Originality + Copyright)"]:::dark
-    end
+%% --- Nodes ---
+U["User"]:::dark --> J["JingleAgent"]:::dark
 
-    J --> SUNO["Suno API"]:::api
-    Q --> SUNO:::api
+subgraph M["Musigent"]
+    J --> MS["MemoryStore"]:::dark
+    MS <--> T["TimeAgent"]:::dark
+    T --> Q["QualityAgent<br/>(Originality + Copyright)"]:::dark
+end
 
-    T --> GAPI["Google Geolocation API"]:::api
-    Q --> AUDD["Audd.io Music Recognition API"]:::api
+J --> SUNO["Suno API"]:::api
+Q --> SUNO:::api
 
-    Q --> MS:::dark
+T --> GAPI["Google Geolocation API"]:::api
+Q --> AUDD["Audd.io Music Recognition API"]:::api
+
+Q --> MS:::dark
+
 ```
 
 ---
