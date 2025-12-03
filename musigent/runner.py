@@ -61,4 +61,16 @@ class MusigentRunner:
 
         plan = self.jingle.build_plan(j_input)
         draft = self.composer.compose(plan)
-        eval_ = self.quality.evaluate(dr_
+        eval_ = self.quality.evaluate(draft)
+        time_info = get_utc_time()
+
+        self.memory.save_interaction(plan, draft, eval_, username, time_info)
+
+        result = {
+            "plan": plan,
+            "draft": draft,
+            "evaluation": eval_,
+            "time_info": time_info,
+        }
+        result["table"] = result_to_dataframe(result)
+        return result
