@@ -1,4 +1,4 @@
-
+from musigent.utils.formatter import result_to_dataframe
 from musigent.agents.planner import PlannerAgent
 from musigent.agents.composer import ComposerAgent
 from musigent.agents.quality import QualityAgent
@@ -22,11 +22,13 @@ class MusigentRunner:
         eval_ = self.quality.evaluate(draft)
         self.memory.save_interaction(plan, draft, eval_, username, time_info)
         time_info = get_utc_time()
-        return {"plan": plan,
+        result {"plan": plan,
                 "draft": draft,
                 "evaluation": eval_,
                 "time_info": time_info
         }
+        result["table"] = result_to_dataframe(result)
+        return result
     def handle_jingle_survey(
         self,
         brand_name: str,
@@ -61,10 +63,12 @@ class MusigentRunner:
         time_info = get_utc_time()
         self.memory.save_interaction(plan, draft, eval_, username, time_info)
 
-        return {
+        result {
             "plan": plan,
             "draft": draft,
             "evaluation": eval_,
             "time_info": time_info,
         }
+        result["table"] = result_to_dataframe(result)
+        return result
 
