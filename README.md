@@ -1,6 +1,6 @@
 # 🎵 Musigent — AI Jingle & Music Agent (Real‑World Suno API + Multi‑Agent System)
 
-*An advanced multi‑agent AI system that generates copyright‑safe jingles, background music, and persona‑based audio using real external APIs.*
+*A multi‑agent AI system that generates copyright‑safe jingles, background music, and persona‑based audio using real external APIs.*
 
 Musigent is built as the **Capstone Project for the Kaggle 5‑Day Agents Intensive**, using a fully modular **multi‑agent architecture** enhanced with:
 
